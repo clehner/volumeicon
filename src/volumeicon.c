@@ -588,13 +588,17 @@ static void status_icon_on_button_release(GtkStatusIcon * status_icon,
 		gtk_window_present_with_time(GTK_WINDOW(m_scale_window), event->time);
 		g_timeout_add(TIMER_INTERVAL, scale_timeout, NULL);
 	}
-	else if(event->button == 1 ||
+	else if((event->button == 1 && !config_get_left_mouse_slider()) ||
 		(event->button == 2 && config_get_middle_mouse_mute()))
 	{
 		m_mute = !m_mute;
 		backend_set_volume(m_volume);
 		backend_set_mute(m_mute);
 		status_icon_update(m_mute, FALSE);
+	}
+	else if(event->button == 1 && config_get_left_mouse_slider())
+	{
+		gtk_widget_hide(m_scale_window);
 	}
 	else if(event->button == 2)
 	{
